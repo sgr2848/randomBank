@@ -183,22 +183,43 @@ public class Bank implements ActionListener {
         // this.main_frame = new_frame;
 
     }
-
+    JPanel home(Customer some_customer){
+        JPanel home = new JPanel();
+        JLabel top = new JLabel("Customer Information");
+        JLabel first_name = new JLabel("First Name");
+        JLabel last_name = new JLabel("Last Name");
+        JLabel no_acc = new JLabel("Total Number of Accounts");
+        return home;
+    }
+    JPanel add_acc(Customer some_customer){
+        JPanel add_form = new JPanel();
+        return add_form;
+    }
+    JPanel show_acc (Customer some_customer){
+        JPanel acc_panel = new JPanel();
+        return acc_panel;
+    }
     void dash_board(Customer some_customer) {
+
         JFrame new_frame = new JFrame();
+        new_frame.setLocationRelativeTo(null);
+        boolean home_b = true;
+        boolean a_f = true;
+        boolean acc_p = true;
         GridBagLayout layout = new GridBagLayout();
         new_frame.setLayout(layout);
         GridBagConstraints cons = new GridBagConstraints();
-        new_frame.setSize(1200, 800);
+        cons.anchor = GridBagConstraints.NORTHWEST;
+        new_frame.setSize(500, 250);
         JPanel up = new JPanel();
-        up.setSize(1200, 400);
+        up.setSize(800, 100);
         up.setBackground(Color.CYAN);
         JPanel side = new JPanel();
-        side.setSize(400, 800);
+        side.setSize(100, 700);
         side.setBackground(Color.LIGHT_GRAY);
         JPanel view = new JPanel();
-        view.setSize(800, 800);
-        view.setBackground(Color.WHITE);
+        view.setSize(700, 700);
+        view.setBackground(Color.BLUE);
         JLabel up_head = new JLabel(String.format("Hello, %s", some_customer.get_first_name()));
         up_head.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
         up.add(up_head);
@@ -206,23 +227,40 @@ public class Bank implements ActionListener {
         JButton home = new JButton("Home");
         JButton add_acc_b = new JButton("Add New Account");
         JButton show_all_acc = new JButton("Show All Account");
-
+        up.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
+        side.setLayout(new BoxLayout(side, BoxLayout.PAGE_AXIS));
+        side.setBorder( new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
         side_l.setFont(new Font("Courier", Font.BOLD, 20));
         side_l.setBorder(
                 new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
+        side.add(Box.createVerticalStrut(2));
         side.add(side_l);
+
         side.add(home);side.add(add_acc_b);side.add(show_all_acc);
-        cons.fill = GridBagConstraints.VERTICAL;
+        view.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));;
+        view.add(new JLabel("HERE"));
+        cons.fill = GridBagConstraints.HORIZONTAL;
+        cons.gridwidth= GridBagConstraints.REMAINDER;
+        cons.weighty = 1.0;
+        cons.weightx = 1.0;
         cons.gridx = 0;
         cons.gridy = 0;
         new_frame.add(up, cons);
-        cons.fill = GridBagConstraints.HORIZONTAL;
+        cons.fill = GridBagConstraints.VERTICAL;
+        cons.weighty = 1.0;
+        cons.weightx = 1.0;
         cons.gridx = 0;
         cons.gridy = 1;
+        cons.gridheight= GridBagConstraints.REMAINDER;
+
         new_frame.add(side, cons);
-        cons.fill = GridBagConstraints.HORIZONTAL;
+        cons.fill = GridBagConstraints.BOTH;
+        cons.weighty = 1.0;
+        cons.weightx = 1.0;
         cons.gridx = 1;
         cons.gridy = 1;
+        cons.gridwidth= GridBagConstraints.REMAINDER;
+        cons.gridheight=GridBagConstraints.REMAINDER;
         new_frame.add(view, cons);
         new_frame.setVisible(true);
         // new_frame.pack();
