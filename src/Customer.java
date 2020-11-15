@@ -1,0 +1,29 @@
+import java.util.ArrayList;
+
+public class Customer {
+    private final String first_name;
+    private final String last_name;
+    private final String pass_code;
+    private int no_of_acc;
+    private ArrayList<Account> account_list;
+    public Customer(String first_name, String last_name,String pass_code){
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.no_of_acc = 0;
+        this.pass_code = pass_code;
+    }
+    public String get_first_name(){
+        return this.first_name;
+    }
+    public String get_last_name(){
+        return this.last_name;
+    }
+    public String get_pass(){
+        return this.pass_code;
+    }
+    public void add_account(Account account){
+        this.account_list.add(account);
+        this.no_of_acc++;
+    }
+
+}
