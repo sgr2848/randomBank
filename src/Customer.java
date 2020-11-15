@@ -21,6 +21,9 @@ public class Customer {
     public String get_pass(){
         return this.pass_code;
     }
+    public int get_acc_no(){
+        return this.no_of_acc;
+    }
     public void add_account(Account account){
         this.account_list.add(account);
         this.no_of_acc++;

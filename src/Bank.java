@@ -40,7 +40,6 @@ public class Bank implements ActionListener {
 
     private boolean check_customer(String first_name, String last_name, String pass) {
         return false;
-
     }
 
     private boolean check_login(String name, String pass) {
@@ -183,12 +182,30 @@ public class Bank implements ActionListener {
         // this.main_frame = new_frame;
 
     }
-    JPanel home(Customer some_customer){
+    JPanel get_home(Customer some_customer){
         JPanel home = new JPanel();
+        GridLayout layout = new GridLayout(4, 2);
+        layout.setHgap(10);
+        layout.setVgap(3);
+        home.setLayout(layout);
         JLabel top = new JLabel("Customer Information");
-        JLabel first_name = new JLabel("First Name");
-        JLabel last_name = new JLabel("Last Name");
-        JLabel no_acc = new JLabel("Total Number of Accounts");
+        JLabel first_name = new JLabel("First Name : ");
+        JLabel f_n = new JLabel(String.format("%s",
+                some_customer.get_first_name()));
+        JLabel last_name = new JLabel("Last Name :");
+        JLabel l_n = new JLabel(String.format("%s",
+                some_customer.get_last_name()));
+        JLabel no_acc = new JLabel("Total Number of Accounts : ");
+        JLabel no_acc_i = new JLabel(String.format("%d",
+                some_customer.get_acc_no()));
+        home.add(top);
+        home.add(Box.createHorizontalBox());
+        home.add(first_name);
+        home.add(f_n);
+        home.add(last_name);
+        home.add(l_n);
+        home.add(no_acc);
+        home.add(no_acc_i);
         return home;
     }
     JPanel add_acc(Customer some_customer){
@@ -204,13 +221,13 @@ public class Bank implements ActionListener {
         JFrame new_frame = new JFrame();
         new_frame.setLocationRelativeTo(null);
         boolean home_b = true;
-        boolean a_f = true;
-        boolean acc_p = true;
+        boolean a_f = false;
+        boolean acc_p = false;
         GridBagLayout layout = new GridBagLayout();
         new_frame.setLayout(layout);
         GridBagConstraints cons = new GridBagConstraints();
         cons.anchor = GridBagConstraints.NORTHWEST;
-        new_frame.setSize(500, 250);
+        new_frame.setSize(800, 250);
         JPanel up = new JPanel();
         up.setSize(800, 100);
         up.setBackground(Color.CYAN);
@@ -219,7 +236,7 @@ public class Bank implements ActionListener {
         side.setBackground(Color.LIGHT_GRAY);
         JPanel view = new JPanel();
         view.setSize(700, 700);
-        view.setBackground(Color.BLUE);
+        view.setBackground(Color.WHITE);
         JLabel up_head = new JLabel(String.format("Hello, %s", some_customer.get_first_name()));
         up_head.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
         up.add(up_head);
@@ -235,10 +252,11 @@ public class Bank implements ActionListener {
                 new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
         side.add(Box.createVerticalStrut(2));
         side.add(side_l);
-
+        home.setBackground(Color.LIGHT_GRAY);
+        add_acc_b.setBackground(Color.LIGHT_GRAY);
+        show_all_acc.setBackground(Color.LIGHT_GRAY);
         side.add(home);side.add(add_acc_b);side.add(show_all_acc);
         view.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));;
-        view.add(new JLabel("HERE"));
         cons.fill = GridBagConstraints.HORIZONTAL;
         cons.gridwidth= GridBagConstraints.REMAINDER;
         cons.weighty = 1.0;
@@ -252,7 +270,6 @@ public class Bank implements ActionListener {
         cons.gridx = 0;
         cons.gridy = 1;
         cons.gridheight= GridBagConstraints.REMAINDER;
-
         new_frame.add(side, cons);
         cons.fill = GridBagConstraints.BOTH;
         cons.weighty = 1.0;
@@ -261,9 +278,14 @@ public class Bank implements ActionListener {
         cons.gridy = 1;
         cons.gridwidth= GridBagConstraints.REMAINDER;
         cons.gridheight=GridBagConstraints.REMAINDER;
+        JPanel home_panel = get_home(some_customer);
+        view.add(home_panel);
+        if(home_b==true){
+            home_panel.setVisible(true);
+        }
         new_frame.add(view, cons);
         new_frame.setVisible(true);
-        // new_frame.pack();
+         new_frame.pack();
     }
 
     @Override
