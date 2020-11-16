@@ -1,17 +1,39 @@
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class Bank implements ActionListener {
     public JFrame main_frame;
     private ArrayList<Customer> c_list;
-
+    public static boolean is_numeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
     public Bank() {
         this.c_list = new ArrayList<Customer>();
+    }
+    private void add_to_acc_list(Customer some_customer, String dollar_val,
+                                 String acc_type,String rate_val){
+        if (acc_type.equals("Checking")){
+            int cents_val = Integer.parseInt(dollar_val) * 100;
+            some_customer.add_account(new Checking(new Currency(cents_val)));
+        }else if(acc_type)
+
     }
 
     public Customer get_customer(String first_name, String pass) {
@@ -26,15 +48,15 @@ public class Bank implements ActionListener {
     }
 
     public void init() {
-        // this.main_frame = new JFrame();
-        // main_frame.setLocationRelativeTo(null);
-        // main_frame.setTitle("The Bank : We will take your money");
-        // main_frame.setSize(400, 400);
-        // main_frame.setLayout(new BorderLayout());
-        // main_frame.setVisible(true);
-        // this.first_prompt();
-        // main_frame.pack();
-        this.dash_board(new Customer("Sagar", "Shrestha", "right"));
+//         this.main_frame = new JFrame();
+//         main_frame.setLocationRelativeTo(null);
+//         main_frame.setTitle("The Bank : We will take your money");
+//         main_frame.setSize(400, 400);
+//         main_frame.setLayout(new BorderLayout());
+//         main_frame.setVisible(true);
+//        this.first_prompt();
+//        main_frame.pack();
+        dash_board(new Customer("Hiro","Kuda","Scum"));
 
     }
 
@@ -177,8 +199,9 @@ public class Bank implements ActionListener {
                 .addGroup(group.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(p_n).addGap(30)
                         .addComponent(p_f))
                 .addGroup(group.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(submit)));
-        // new_frame.pack();
+        new_frame.pack();
         new_frame.setVisible(true);
+
         // this.main_frame = new_frame;
 
     }
@@ -208,34 +231,101 @@ public class Bank implements ActionListener {
         home.add(no_acc_i);
         return home;
     }
+
     JPanel add_acc(Customer some_customer){
+        JPanel main_panel = new JPanel();
+        main_panel.setLayout(new BoxLayout(main_panel, BoxLayout.PAGE_AXIS));
         JPanel add_form = new JPanel();
-        return add_form;
+        add_form.setLayout(new BoxLayout(add_form, BoxLayout.PAGE_AXIS));
+        add_form.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
+        JLabel info = new JLabel("Please select the type of account you " +
+                "would like to open.");
+        JRadioButton acc_check = new JRadioButton("Checking");
+        JRadioButton acc_save = new JRadioButton("Savings");
+        JRadioButton acc_cd = new JRadioButton("CD");
+        ButtonGroup acc_group = new ButtonGroup();
+        acc_group.add(acc_check);acc_group.add(acc_save);acc_group.add(acc_cd);
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Double.class);
+        formatter.setMinimum(1.0);
+        formatter.setMaximum(Double.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        // If you want the value to be committed on each keystroke instead of focus lost
+        formatter.setCommitsOnValidEdit(true);
+        JFormattedTextField d_f = new JFormattedTextField(formatter);
+        JLabel d_l = new JLabel("Deposit Amount :   $");
+        JLabel r_l = new JLabel("Rate : %");
+        JFormattedTextField r_f = new JFormattedTextField(formatter);
+        JButton c_a_b = new JButton("Create Account");
+        add_form.add(info);add_form.add(acc_check);add_form.add(acc_save);add_form.add(acc_cd);add_form.add(d_l);
+        add_form.add(d_f);add_form.add(r_l);add_form.add(r_f);
+        main_panel.add(add_form);
+        main_panel.add(Box.createVerticalStrut(5));
+        main_panel.add(Box.createHorizontalStrut(350));
+        main_panel.add(c_a_b);
+        String[] curr_selection={"null"};
+        class AccItemListener implements ItemListener {
+            public void itemStateChanged(ItemEvent ex) {
+                String item = ((AbstractButton) ex.getItemSelectable()).getActionCommand();
+                boolean selected = (ex.getStateChange() == ItemEvent.SELECTED);
+
+                if( selected == true){
+                    curr_selection[0] = item;
+                    System.out.println(item);
+                }
+            }
+        }
+        ItemListener il = new AccItemListener();
+        acc_check.addItemListener(il);
+        acc_save.addItemListener(il);
+        acc_cd.addItemListener(il);
+
+        c_a_b.addActionListener(e->{
+            if(curr_selection[0]!="null"){
+                if(curr_selection.equals("Checking")){
+                    JOptionPane.showMessageDialog(null, "Success, Rates will " +
+                            "be" + " ignored");
+                    this.add_to_acc_list(some_customer,d_f.getText(),
+                            curr_selection[0],r_f.getText());
+                }else{
+                    JOptionPane.showMessageDialog(null, "Success!!!");
+                    this.add_to_acc_list(some_customer,d_f.getText(),
+                            curr_selection[0],r_f.getText());
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Check the account " +
+                        "type!!!");
+            }
+        });
+        return main_panel;
     }
     JPanel show_acc (Customer some_customer){
         JPanel acc_panel = new JPanel();
+        if( some_customer.get_acc_no()==0){
+            acc_panel.add(new JLabel("There is no open account. Try opening " +
+                    "one !!!"));
+        }
         return acc_panel;
     }
     void dash_board(Customer some_customer) {
 
         JFrame new_frame = new JFrame();
+        new_frame.setTitle("The Bank : We will take your money");
         new_frame.setLocationRelativeTo(null);
-        boolean home_b = true;
-        boolean a_f = false;
-        boolean acc_p = false;
+        final boolean[] home_bool = {true};
+        final boolean[] add_bool = {false};
+        final boolean[] acc_bool = {false};
         GridBagLayout layout = new GridBagLayout();
         new_frame.setLayout(layout);
         GridBagConstraints cons = new GridBagConstraints();
         cons.anchor = GridBagConstraints.NORTHWEST;
-        new_frame.setSize(800, 250);
+        new_frame.setSize(900, 350);
         JPanel up = new JPanel();
-        up.setSize(800, 100);
         up.setBackground(Color.CYAN);
         JPanel side = new JPanel();
-        side.setSize(100, 700);
         side.setBackground(Color.LIGHT_GRAY);
         JPanel view = new JPanel();
-        view.setSize(700, 700);
         view.setBackground(Color.WHITE);
         JLabel up_head = new JLabel(String.format("Hello, %s", some_customer.get_first_name()));
         up_head.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
@@ -256,7 +346,8 @@ public class Bank implements ActionListener {
         add_acc_b.setBackground(Color.LIGHT_GRAY);
         show_all_acc.setBackground(Color.LIGHT_GRAY);
         side.add(home);side.add(add_acc_b);side.add(show_all_acc);
-        view.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));;
+
+        view.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
         cons.fill = GridBagConstraints.HORIZONTAL;
         cons.gridwidth= GridBagConstraints.REMAINDER;
         cons.weighty = 1.0;
@@ -274,18 +365,80 @@ public class Bank implements ActionListener {
         cons.fill = GridBagConstraints.BOTH;
         cons.weighty = 1.0;
         cons.weightx = 1.0;
-        cons.gridx = 1;
+        cons.gridx = 4;
         cons.gridy = 1;
         cons.gridwidth= GridBagConstraints.REMAINDER;
         cons.gridheight=GridBagConstraints.REMAINDER;
         JPanel home_panel = get_home(some_customer);
         view.add(home_panel);
-        if(home_b==true){
-            home_panel.setVisible(true);
-        }
+        home_panel.setVisible(true);
         new_frame.add(view, cons);
+        JPanel acc_panel = show_acc(some_customer);
+        JPanel add_panel = add_acc(some_customer);
+        view.add(acc_panel);view.add(add_panel);
+        add_panel.setVisible(false);
+        acc_panel.setVisible(false);
+        home.addActionListener(e->{
+                if(home_bool[0] == false && add_bool[0]==true && acc_bool[0]==
+                        false){
+                    add_bool[0] = false;
+                    home_bool[0] = true;
+                    acc_panel.setVisible(false);
+                    add_panel.setVisible(false);
+                    home_panel.setVisible(true);
+
+                }else if(home_bool[0] ==false && add_bool[0] ==false && acc_bool[0] == true){
+                    acc_bool[0] = false;
+                    home_bool[0] = true;
+                    acc_panel.setVisible(false);
+                    add_panel.setVisible(false);
+                    home_panel.setVisible(true);
+                }else{
+
+                }
+        });
+
+        add_acc_b.addActionListener(e-> {
+
+                if(home_bool[0] == true && add_bool[0]==false && acc_bool[0]==
+                        false){
+                    add_bool[0] = true;
+                    home_bool[0] = false;
+                    acc_panel.setVisible(false);
+                    add_panel.setVisible(true);
+                    home_panel.setVisible(false);
+
+                }else if(home_bool[0] ==false && add_bool[0] ==false && acc_bool[0] == true){
+                    acc_bool[0] = false;
+                    add_bool[0] = true;
+                    acc_panel.setVisible(false);
+                    add_panel.setVisible(true);
+                    home_panel.setVisible(false);
+                }else{
+
+                }
+        });
+
+        show_all_acc.addActionListener(e->{
+            if(home_bool[0] == true && add_bool[0]==false && acc_bool[0]==
+                    false){
+                acc_bool[0] = true;
+                home_bool[0] = false;
+                acc_panel.setVisible(true);
+                add_panel.setVisible(false);
+                home_panel.setVisible(false);
+            }else if(home_bool[0] ==false && add_bool[0] ==true && acc_bool[0] == false){
+                add_bool[0] = false;
+                acc_bool[0] = true;
+                acc_panel.setVisible(true);
+                add_panel.setVisible(false);
+                home_panel.setVisible(false);
+            }else{
+
+            }
+        });
         new_frame.setVisible(true);
-         new_frame.pack();
+//         new_frame.pack();
     }
 
     @Override
@@ -293,7 +446,7 @@ public class Bank implements ActionListener {
 
     }
 
-    public static void main(String[] agrs) {
+    public static void main(String[] args) {
         Bank new_b = new Bank();
         new_b.init();
     }
