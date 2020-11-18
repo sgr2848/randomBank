@@ -3,9 +3,12 @@ public class Checking extends Account {
     public Checking(Currency init_deposit){
         super(init_deposit);
     }
-    public void withdraw(Currency some_money){}
-    public void deposit(Currency some_money){
+    public Result withdraw(Currency some_money){}
+    public Result deposit(Currency some_money){
 
+    }
+    public String get_type(){
+        return "Checking";
     }
     public Currency get_balance(){
         return this.amount;

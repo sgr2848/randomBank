@@ -29,10 +29,19 @@ public class Bank implements ActionListener {
     }
     private void add_to_acc_list(Customer some_customer, String dollar_val,
                                  String acc_type,String rate_val){
-        if (acc_type.equals("Checking")){
+        if (acc_type=="Checking") {
             int cents_val = Integer.parseInt(dollar_val) * 100;
             some_customer.add_account(new Checking(new Currency(cents_val)));
-        }else if(acc_type)
+        }else if(acc_type=="Savings"){
+            int cents_val = Integer.parseInt(dollar_val) * 100;
+            double rate = Double.parseDouble(rate_val);
+            some_customer.add_account(new Saving(new Currency(cents_val),rate));
+        }
+        else{
+            int cents_val = Integer.parseInt(dollar_val) * 100;
+            double rate = Double.parseDouble(rate_val);
+            some_customer.add_account(new CD(new Currency(cents_val),rate));
+        }
 
     }
 
@@ -205,6 +214,34 @@ public class Bank implements ActionListener {
         // this.main_frame = new_frame;
 
     }
+    void withdraw(Account i){
+        JFrame wit = new JFrame();
+        wit.add(new JLabel(" How much would you like to withdraw"));
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Double.class);
+        formatter.setMinimum(1.0);
+        formatter.setMaximum(Double.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        // If you want the value to be committed on each keystroke instead of focus lost
+        formatter.setCommitsOnValidEdit(true);
+        JFormattedTextField wit_amount = new JFormattedTextField(formatter);
+        wit.add(wit_amount);
+    }
+    void deposit(Account i){
+        JFrame dep = new JFrame();
+        dep.add(new JLabel(" How much would you like to withdraw"));
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Double.class);
+        formatter.setMinimum(1.0);
+        formatter.setMaximum(Double.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        // If you want the value to be committed on each keystroke instead of focus lost
+        formatter.setCommitsOnValidEdit(true);
+        JFormattedTextField dep_amount = new JFormattedTextField(formatter);
+        dep.add(dep_amount);
+    }
     JPanel get_home(Customer some_customer){
         JPanel home = new JPanel();
         GridLayout layout = new GridLayout(4, 2);
@@ -286,11 +323,12 @@ public class Bank implements ActionListener {
                 if(curr_selection.equals("Checking")){
                     JOptionPane.showMessageDialog(null, "Success, Rates will " +
                             "be" + " ignored");
-                    this.add_to_acc_list(some_customer,d_f.getText(),
+                    add_to_acc_list(some_customer,d_f.getText(),
                             curr_selection[0],r_f.getText());
+
                 }else{
                     JOptionPane.showMessageDialog(null, "Success!!!");
-                    this.add_to_acc_list(some_customer,d_f.getText(),
+                    add_to_acc_list(some_customer,d_f.getText(),
                             curr_selection[0],r_f.getText());
                 }
             }else{
@@ -302,9 +340,38 @@ public class Bank implements ActionListener {
     }
     JPanel show_acc (Customer some_customer){
         JPanel acc_panel = new JPanel();
+        acc_panel.setLayout(new BoxLayout(acc_panel, BoxLayout.PAGE_AXIS));
         if( some_customer.get_acc_no()==0){
-            acc_panel.add(new JLabel("There is no open account. Try opening " +
+            acc_panel.add(new JLabel("You don't have any open account. Try " +
+                    "opening " +
                     "one !!!"));
+        }
+        else{
+            acc_panel.setPreferredSize(new Dimension(800,150));
+            acc_panel.setMaximumSize(new Dimension(800,150));
+            JScrollPane scrollFrame = new JScrollPane(acc_panel);
+            acc_panel.setAutoscrolls(true);
+//            acc_panel.add(scrollFrame);
+            scrollFrame.setPreferredSize(new Dimension( 590,140));
+            for(Account i : some_customer.account_list){
+                Box new_b = new Box(BoxLayout.X_AXIS);
+                new_b.setBorder(BorderFactory.createLineBorder(Color.black));
+                new_b.add(new JLabel("Account Type :  "));
+                JLabel name = new JLabel(i.get_type());
+                JLabel amount = new JLabel(i.get_balance().to_string());
+                new_b.add(name);
+                new_b.add(Box.createVerticalStrut(1));
+                new_b.add(amount);
+
+                if (!i.get_type().equals("CD")){
+
+                    JButton withdraw = new JButton("withdraw");
+                    JButton deposit = new JButton("deposit");
+                    new_b.add(withdraw);
+                    new_b.add(deposit);
+                }
+                acc_panel.add(new_b);
+            }
         }
         return acc_panel;
     }
@@ -320,7 +387,7 @@ public class Bank implements ActionListener {
         new_frame.setLayout(layout);
         GridBagConstraints cons = new GridBagConstraints();
         cons.anchor = GridBagConstraints.NORTHWEST;
-        new_frame.setSize(900, 350);
+        new_frame.setSize(1200, 350);
         JPanel up = new JPanel();
         up.setBackground(Color.CYAN);
         JPanel side = new JPanel();
@@ -369,51 +436,75 @@ public class Bank implements ActionListener {
         cons.gridy = 1;
         cons.gridwidth= GridBagConstraints.REMAINDER;
         cons.gridheight=GridBagConstraints.REMAINDER;
-        JPanel home_panel = get_home(some_customer);
-        view.add(home_panel);
-        home_panel.setVisible(true);
+        JPanel[] home_panel = {get_home(some_customer)};
+        view.add(home_panel[0]);
+        home_panel[0].setVisible(true);
         new_frame.add(view, cons);
-        JPanel acc_panel = show_acc(some_customer);
-        JPanel add_panel = add_acc(some_customer);
-        view.add(acc_panel);view.add(add_panel);
-        add_panel.setVisible(false);
-        acc_panel.setVisible(false);
+        JPanel[] acc_panel = {show_acc(some_customer)};
+        JPanel[] add_panel = {add_acc(some_customer)};
+        view.add(acc_panel[0]);view.add(add_panel[0]);
+        add_panel[0].setVisible(false);
+        acc_panel[0].setVisible(false);
+        System.out.println(home_panel[0]);
         home.addActionListener(e->{
                 if(home_bool[0] == false && add_bool[0]==true && acc_bool[0]==
                         false){
                     add_bool[0] = false;
                     home_bool[0] = true;
-                    acc_panel.setVisible(false);
-                    add_panel.setVisible(false);
-                    home_panel.setVisible(true);
+                    home_panel[0].removeAll();
+                    home_panel[0] = this.get_home(some_customer);
+                    System.out.println(home_panel[0]);
+                    System.out.println(some_customer.get_acc_no());
+                    home_panel[0].repaint();
+                    view.add(home_panel[0]);
+                    view.revalidate();
+                    acc_panel[0].setVisible(false);
+                    add_panel[0].setVisible(false);
+                    home_panel[0].setVisible(true);
+
 
                 }else if(home_bool[0] ==false && add_bool[0] ==false && acc_bool[0] == true){
                     acc_bool[0] = false;
                     home_bool[0] = true;
-                    acc_panel.setVisible(false);
-                    add_panel.setVisible(false);
-                    home_panel.setVisible(true);
+                    home_panel[0].removeAll();
+                    home_panel[0] = this.get_home(some_customer);
+                    System.out.println(some_customer.get_acc_no());
+                    home_panel[0].repaint();
+                    view.add(home_panel[0]);
+                    view.revalidate();
+                    System.out.println(home_panel[0]);
+                    acc_panel[0].setVisible(false);
+                    add_panel[0].setVisible(false);
+                    home_panel[0].setVisible(true);
+
                 }else{
 
                 }
         });
+        System.out.println(new JPanel());
 
         add_acc_b.addActionListener(e-> {
 
                 if(home_bool[0] == true && add_bool[0]==false && acc_bool[0]==
                         false){
+
                     add_bool[0] = true;
                     home_bool[0] = false;
-                    acc_panel.setVisible(false);
-                    add_panel.setVisible(true);
-                    home_panel.setVisible(false);
+
+                    System.out.println(some_customer.get_acc_no());
+                    home_panel[0].setVisible(false);
+                    acc_panel[0].setVisible(false);
+                    add_panel[0].setVisible(true);
 
                 }else if(home_bool[0] ==false && add_bool[0] ==false && acc_bool[0] == true){
                     acc_bool[0] = false;
                     add_bool[0] = true;
-                    acc_panel.setVisible(false);
-                    add_panel.setVisible(true);
-                    home_panel.setVisible(false);
+                    System.out.println(some_customer.get_acc_no());
+                    home_panel[0].setVisible(false);
+                    acc_panel[0].setVisible(false);
+                    add_panel[0].setVisible(true);
+
+
                 }else{
 
                 }
@@ -424,15 +515,27 @@ public class Bank implements ActionListener {
                     false){
                 acc_bool[0] = true;
                 home_bool[0] = false;
-                acc_panel.setVisible(true);
-                add_panel.setVisible(false);
-                home_panel.setVisible(false);
+                acc_panel[0].removeAll();
+                acc_panel[0] = this.show_acc(some_customer);
+                System.out.println(some_customer.get_acc_no());
+                acc_panel[0].repaint();
+                view.add(acc_panel[0]);
+                view.revalidate();
+                acc_panel[0].setVisible(true);
+                add_panel[0].setVisible(false);
+                home_panel[0].setVisible(false);
             }else if(home_bool[0] ==false && add_bool[0] ==true && acc_bool[0] == false){
                 add_bool[0] = false;
                 acc_bool[0] = true;
-                acc_panel.setVisible(true);
-                add_panel.setVisible(false);
-                home_panel.setVisible(false);
+                acc_panel[0].removeAll();
+                acc_panel[0] = this.show_acc(some_customer);
+                System.out.println(some_customer.get_acc_no());
+                acc_panel[0].repaint();
+                view.add(acc_panel[0]);
+                view.revalidate();
+                acc_panel[0].setVisible(true);
+                add_panel[0].setVisible(false);
+                home_panel[0].setVisible(false);
             }else{
 
             }

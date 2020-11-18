@@ -3,12 +3,18 @@ public class Saving extends Account{
     public Saving(Currency init , double rate){
         super(init);
         this.rate = rate;
+        System.out.println("Opened one-Savings");
     }
-    public void withdraw(Currency some_money){
+    public String get_type(){
+        return "Saving";
+    }
+    public Result withdraw(Currency some_money){
 
     }
-    public void deposit(Currency some_money){
+    public Result deposit(Currency some_money){
+
     }
+
     public Currency get_balance(){
         return this.amount;
     }
