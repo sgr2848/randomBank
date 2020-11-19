@@ -214,8 +214,10 @@ public class Bank implements ActionListener {
         // this.main_frame = new_frame;
 
     }
-    void withdraw(Account i){
-        JFrame wit = new JFrame();
+    void withdraw_frame(Account i){
+        JFrame n_d = new JFrame();
+        JPanel wit = new JPanel();
+        wit.setLayout(new BoxLayout(wit, BoxLayout.PAGE_AXIS));
         wit.add(new JLabel(" How much would you like to withdraw"));
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
@@ -226,10 +228,18 @@ public class Bank implements ActionListener {
         // If you want the value to be committed on each keystroke instead of focus lost
         formatter.setCommitsOnValidEdit(true);
         JFormattedTextField wit_amount = new JFormattedTextField(formatter);
+        JButton add_money = new JButton("Get My Money");
         wit.add(wit_amount);
+        wit.add(add_money);
+        wit.setVisible(true);
+        n_d.add(wit);
+        n_d.pack();
+        n_d.setVisible(true);
     }
-    void deposit(Account i){
-        JFrame dep = new JFrame();
+    void deposit_frame(Account i){
+        JFrame n_d = new JFrame();
+        JPanel dep = new JPanel();
+        dep.setLayout(new BoxLayout(dep, BoxLayout.PAGE_AXIS));
         dep.add(new JLabel(" How much would you like to withdraw"));
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
@@ -241,6 +251,17 @@ public class Bank implements ActionListener {
         formatter.setCommitsOnValidEdit(true);
         JFormattedTextField dep_amount = new JFormattedTextField(formatter);
         dep.add(dep_amount);
+        JButton give_money = new JButton("Take my money!");
+        dep.add(give_money);
+        n_d.add(dep);
+        n_d.pack();
+        dep.setVisible(true);
+        n_d.setVisible(true);
+        give_money.addActionListener(e->{
+
+            int cent_val = Integer.parseInt(dep_amount.getText())*100;
+            i.deposit(new Currency(cent_val));
+        });
     }
     JPanel get_home(Customer some_customer){
         JPanel home = new JPanel();
@@ -369,6 +390,12 @@ public class Bank implements ActionListener {
                     JButton deposit = new JButton("deposit");
                     new_b.add(withdraw);
                     new_b.add(deposit);
+                    withdraw.addActionListener(e->{
+                        withdraw_frame(i);
+                    });
+                    deposit.addActionListener(e->{
+                        deposit_frame(i);
+                    });
                 }
                 acc_panel.add(new_b);
             }
@@ -538,7 +565,7 @@ public class Bank implements ActionListener {
                 home_panel[0].setVisible(false);
             }else{
 
-            }
+            }   
         });
         new_frame.setVisible(true);
 //         new_frame.pack();

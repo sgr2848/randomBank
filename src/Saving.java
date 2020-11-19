@@ -9,10 +9,10 @@ public class Saving extends Account{
         return "Saving";
     }
     public Result withdraw(Currency some_money){
-
+        return Result.SUCCESS;
     }
     public Result deposit(Currency some_money){
-
+        return Result.SUCCESS;
     }
 
     public Currency get_balance(){

@@ -8,14 +8,14 @@ public class CD extends Account {
     }
 
     public Result deposit(Currency some_money) {
-
+        return Result.SUCCESS;
     }
     public String get_type(){
         return "CD";
     }
 
     public Result withdraw(Currency some_money) {
-        
+        return Result.SUCCESS;
     }
 
     public Currency get_balance() {
