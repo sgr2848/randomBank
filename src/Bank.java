@@ -10,50 +10,68 @@ import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+/*
+*@author Sagar Shrestha
+*@version 0.01
+*@since 2020-11-20
+*/
 public class Bank implements ActionListener {
     public JFrame main_frame;
     private ArrayList<Customer> c_list;
+
     public Bank() {
         /*
-        Constructor for the Main GUI
+         * Constructor for the Main GUI
          */
 
         this.c_list = new ArrayList<Customer>();
-        Customer sgr = new Customer("Sagar","Shrestha","pass");
-        Account save_first = new Saving(new Currency(250000),2);
+        Customer sgr = new Customer("Sagar", "Shrestha", "pass");
+        Account save_first = new Saving(new Currency(250000), 2);
         sgr.add_account(save_first);
         this.c_list.add(sgr);
     }
-    //Utility Function
-    private void add_to_acc_list(Customer some_customer, String dollar_val,
-                                 String acc_type,String rate_val){
+
+    // UTILITY FUNCTION
+    private void add_to_acc_list(Customer some_customer, String dollar_val, String acc_type, String rate_val) {
         /*
-        *This method adds a new account to the customer
-        *@param some_customer(Customer) : Customer in which the acc is to be
-        * added.
-        *@param dollar_val(String) : Init amount
-        * @param acc_type(String) : Type of account(Saving, Checking ,CD)
-        * @param rate_val(String) : rate
+         * This method adds a new account to the customer
+         * 
+         * @param some_customer(Customer) : Customer in which the acc is to be added.
+         * 
+         * @param dollar_val(String) : Init amount
+         * 
+         * @param acc_type(String) : Type of account(Saving, Checking ,CD)
+         * 
+         * @param rate_val(String) : rate
          */
-        if (acc_type=="Checking") {
+        if (acc_type == "Checking") {
             int cents_val = Integer.parseInt(dollar_val) * 100;
             some_customer.add_account(new Checking(new Currency(cents_val)));
-        }else if(acc_type=="Savings"){
+        } else if (acc_type == "Savings") {
             int cents_val = Integer.parseInt(dollar_val) * 100;
             double rate = Double.parseDouble(rate_val);
-            some_customer.add_account(new Saving(new Currency(cents_val),rate));
-        }
-        else{
+            some_customer.add_account(new Saving(new Currency(cents_val), rate));
+        } else {
             int cents_val = Integer.parseInt(dollar_val) * 100;
             double rate = Double.parseDouble(rate_val);
-            some_customer.add_account(new CD(new Currency(cents_val),rate));
+            some_customer.add_account(new CD(new Currency(cents_val), rate));
         }
 
     }
 
+    // UTILITY FUNCTION
     public Customer get_customer(String first_name, String pass) {
+        /*
+         * returns customer if first name and pass matches
+         * 
+         * @param first_name(String) : Customer first name
+         * 
+         * @param pass(String) : Password
+         * 
+         * @return Customer
+         */
         assert (this.c_list.size() > 0) : "There is no customer in the db";
-        System.out.println(first_name+pass);
+        System.out.println(first_name + pass);
         for (Customer i : this.c_list) {
             if (i.get_first_name().equals(first_name) && i.get_pass().equals(pass)) {
                 System.out.println(i.toString());
@@ -63,18 +81,35 @@ public class Bank implements ActionListener {
         return null;
     }
 
+    // GUI FUNCTION
     public void init() {
-         this.main_frame = new JFrame();
-         main_frame.setLocationRelativeTo(null);
-         main_frame.setTitle("The Bank : We will take your money");
-         main_frame.setSize(400, 400);
-         main_frame.setLayout(new BorderLayout());
-         main_frame.setVisible(true);
+        /*
+         * Initialization method of main GUI frame
+         */
+        this.main_frame = new JFrame();
+        main_frame.setLocationRelativeTo(null);
+        main_frame.setTitle("The Bank : We will take your money");
+        main_frame.setSize(400, 400);
+        main_frame.setLayout(new BorderLayout());
+        main_frame.setVisible(true);
         this.first_prompt();
         main_frame.pack();
     }
 
+    // UTILITY FUNCTION
     private boolean check_customer(String first_name, String last_name, String pass) {
+        /*
+         * Checks if the customer is in the array list or not
+         * 
+         * @param first_name(String) : Customer first name
+         * 
+         * @param lasta_name(String): Customer lastname
+         * 
+         * @param pass(String) : Password
+         * 
+         * @return boolean
+         */
+
         for (Customer i : this.c_list) {
             if (i.get_first_name().equals(first_name) && i.get_pass().equals(pass)) {
                 return false;
@@ -83,8 +118,18 @@ public class Bank implements ActionListener {
         return true;
     }
 
+    // UTILITY FUNCTION
     private boolean check_login(String first_name, String pass) {
-        System.out.println(first_name+pass);
+        /*
+         * Checks if any first name and pass matches in customer list
+         * 
+         * @param first_name(String) : Customer first name
+         * 
+         * @param pass(String) : Password
+         * 
+         * @return boolean
+         */
+
         for (Customer i : this.c_list) {
             i.toString();
             if (i.get_first_name().equals(first_name) && i.get_pass().equals(pass)) {
@@ -94,7 +139,20 @@ public class Bank implements ActionListener {
         return false;
     }
 
+    // UTILITY FUNCTION
     private boolean add_to_list(String first_name, String last_name, String pass) {
+        /*
+         * add new Customer to customer list
+         * 
+         * @param first_name(String) : Customer's first name
+         * 
+         * @param last_name(String): Customer's last name
+         * 
+         * @param pass(String) : Password
+         * 
+         * @return boolean
+         */
+
         if (check_customer(first_name, last_name, pass) == true) {
             this.c_list.add(new Customer(first_name, last_name, pass));
             return true;
@@ -103,7 +161,12 @@ public class Bank implements ActionListener {
         }
     }
 
+    // GUI FUNCTION
     void first_prompt() {
+        /*
+         * Shows a new JFrame with new user button or log in button
+         */
+
         JPanel return_panel = new JPanel();
         JButton new_user = new JButton(" New User?");
         JButton login = new JButton("Log In");
@@ -131,7 +194,11 @@ public class Bank implements ActionListener {
         this.main_frame.add(return_panel);
     }
 
+    // GUI FUNCTION
     void login() {
+        /*
+         * Shows a JFrame for a login form
+         */
         JFrame new_frame = new JFrame();
         new_frame.setLocationRelativeTo(null);
         JPanel add_panel = new JPanel();
@@ -180,8 +247,11 @@ public class Bank implements ActionListener {
         new_frame.pack();
     }
 
+    // GUI FUNCTION
     void add_customer() {
-        // returns a Jframe prompt
+        /*
+         * Shows a JFrame for adding a new customer
+         */
         JFrame new_frame = new JFrame();
         new_frame.setLocationRelativeTo(null);
         Container n_p = new_frame.getContentPane();
@@ -230,7 +300,12 @@ public class Bank implements ActionListener {
         new_frame.pack();
         new_frame.setVisible(true);
     }
-    void withdraw_frame(Account i){
+
+    // GUI FUNCTION
+    void withdraw_frame(Account i) {
+        /*
+         * Shows a JFrame for withdrawing form
+         */
         JFrame n_d = new JFrame();
         JPanel wit = new JPanel();
         wit.setLayout(new BoxLayout(wit, BoxLayout.PAGE_AXIS));
@@ -251,21 +326,24 @@ public class Bank implements ActionListener {
         n_d.add(wit);
         n_d.pack();
         n_d.setVisible(true);
-        get_money.addActionListener(e->{
-            Currency some_amount =
-                    new Currency(Integer.parseInt(wit_amount.getText())*100);
+        get_money.addActionListener(e -> {
+            Currency some_amount = new Currency(Integer.parseInt(wit_amount.getText()) * 100);
             Account.Result some_result = i.withdraw(some_amount);
-            if (some_result == Account.Result.OVERDRAFT){
-                JOptionPane.showMessageDialog(null,
-                        "Withdraw failed, Account overdrafts");
-            }else {
+            if (some_result == Account.Result.OVERDRAFT) {
+                JOptionPane.showMessageDialog(null, "Withdraw failed, Account overdrafts");
+            } else {
                 JOptionPane.showMessageDialog(null, "Success");
 
             }
 
         });
     }
-    void deposit_frame(Account i){
+
+    // GUI FUNCTION
+    void deposit_frame(Account i) {
+        /*
+         * Shows a JFrame for a deposit to account
+         */
         JFrame n_d = new JFrame();
         JPanel dep = new JPanel();
         dep.setLayout(new BoxLayout(dep, BoxLayout.PAGE_AXIS));
@@ -286,13 +364,22 @@ public class Bank implements ActionListener {
         n_d.pack();
         dep.setVisible(true);
         n_d.setVisible(true);
-        give_money.addActionListener(e->{
-            int cent_val = Integer.parseInt(dep_amount.getText())*100;
+        give_money.addActionListener(e -> {
+            int cent_val = Integer.parseInt(dep_amount.getText()) * 100;
             i.deposit(new Currency(cent_val));
-            JOptionPane.showMessageDialog(null,"Success");
+            JOptionPane.showMessageDialog(null, "Success");
         });
     }
-    JPanel get_home(Customer some_customer){
+
+    // GUI FUNCTION
+    JPanel get_home(Customer some_customer) {
+        /*
+         * Returns a JPanel for a home,which shows primary information of the customer
+         * 
+         * @param some_customer(Customer)
+         * 
+         * @returns JPanel
+         */
         JPanel home = new JPanel();
         GridLayout layout = new GridLayout(4, 2);
         layout.setHgap(10);
@@ -300,14 +387,11 @@ public class Bank implements ActionListener {
         home.setLayout(layout);
         JLabel top = new JLabel("Customer Information");
         JLabel first_name = new JLabel("First Name : ");
-        JLabel f_n = new JLabel(String.format("%s",
-                some_customer.get_first_name()));
+        JLabel f_n = new JLabel(String.format("%s", some_customer.get_first_name()));
         JLabel last_name = new JLabel("Last Name :");
-        JLabel l_n = new JLabel(String.format("%s",
-                some_customer.get_last_name()));
+        JLabel l_n = new JLabel(String.format("%s", some_customer.get_last_name()));
         JLabel no_acc = new JLabel("Total Number of Accounts : ");
-        JLabel no_acc_i = new JLabel(String.format("%d",
-                some_customer.get_acc_no()));
+        JLabel no_acc_i = new JLabel(String.format("%d", some_customer.get_acc_no()));
         home.add(top);
         home.add(Box.createHorizontalBox());
         home.add(first_name);
@@ -319,19 +403,29 @@ public class Bank implements ActionListener {
         return home;
     }
 
-    JPanel add_acc(Customer some_customer){
+    // GUI FUNCTION
+    JPanel add_acc(Customer some_customer) {
+        /*
+         * Returns a JPanel for adding a new account
+         * 
+         * @param some_customer(Customer)
+         * 
+         * @returns JPanel
+         */
         JPanel main_panel = new JPanel();
         main_panel.setLayout(new BoxLayout(main_panel, BoxLayout.PAGE_AXIS));
         JPanel add_form = new JPanel();
         add_form.setLayout(new BoxLayout(add_form, BoxLayout.PAGE_AXIS));
-        add_form.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
-        JLabel info = new JLabel("Please select the type of account you " +
-                "would like to open.");
+        add_form.setBorder(
+                new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
+        JLabel info = new JLabel("Please select the type of account you " + "would like to open.");
         JRadioButton acc_check = new JRadioButton("Checking");
         JRadioButton acc_save = new JRadioButton("Savings");
         JRadioButton acc_cd = new JRadioButton("CD");
         ButtonGroup acc_group = new ButtonGroup();
-        acc_group.add(acc_check);acc_group.add(acc_save);acc_group.add(acc_cd);
+        acc_group.add(acc_check);
+        acc_group.add(acc_save);
+        acc_group.add(acc_cd);
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
         formatter.setValueClass(Double.class);
@@ -345,19 +439,25 @@ public class Bank implements ActionListener {
         JLabel r_l = new JLabel("Rate : %");
         JFormattedTextField r_f = new JFormattedTextField(formatter);
         JButton c_a_b = new JButton("Create Account");
-        add_form.add(info);add_form.add(acc_check);add_form.add(acc_save);add_form.add(acc_cd);add_form.add(d_l);
-        add_form.add(d_f);add_form.add(r_l);add_form.add(r_f);
+        add_form.add(info);
+        add_form.add(acc_check);
+        add_form.add(acc_save);
+        add_form.add(acc_cd);
+        add_form.add(d_l);
+        add_form.add(d_f);
+        add_form.add(r_l);
+        add_form.add(r_f);
         main_panel.add(add_form);
         main_panel.add(Box.createVerticalStrut(5));
         main_panel.add(Box.createHorizontalStrut(350));
         main_panel.add(c_a_b);
-        String[] curr_selection={"null"};
+        String[] curr_selection = { "null" };
         class AccItemListener implements ItemListener {
             public void itemStateChanged(ItemEvent ex) {
                 String item = ((AbstractButton) ex.getItemSelectable()).getActionCommand();
                 boolean selected = (ex.getStateChange() == ItemEvent.SELECTED);
 
-                if( selected == true){
+                if (selected == true) {
                     curr_selection[0] = item;
                 }
             }
@@ -367,42 +467,44 @@ public class Bank implements ActionListener {
         acc_save.addItemListener(il);
         acc_cd.addItemListener(il);
 
-        c_a_b.addActionListener(e->{
-            if(curr_selection[0]!="null"){
-                if(curr_selection.equals("Checking")){
-                    JOptionPane.showMessageDialog(null, "Success, Rates will " +
-                            "be" + " ignored");
-                    add_to_acc_list(some_customer,d_f.getText(),
-                            curr_selection[0],r_f.getText());
+        c_a_b.addActionListener(e -> {
+            if (curr_selection[0] != "null") {
+                if (curr_selection.equals("Checking")) {
+                    JOptionPane.showMessageDialog(null, "Success, Rates will " + "be" + " ignored");
+                    add_to_acc_list(some_customer, d_f.getText(), curr_selection[0], r_f.getText());
 
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Success!!!");
-                    add_to_acc_list(some_customer,d_f.getText(),
-                            curr_selection[0],r_f.getText());
+                    add_to_acc_list(some_customer, d_f.getText(), curr_selection[0], r_f.getText());
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Check the account " +
-                        "type!!!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Check the account " + "type!!!");
             }
         });
         return main_panel;
     }
-    JPanel show_acc (Customer some_customer){
+
+    // GUI FUNCTION
+    JPanel show_acc(Customer some_customer) {
+        /*
+         * Returns a JPanel that shows all the accounts of the customer
+         * 
+         * @param some_customer(Customer)
+         * 
+         * @returns JPanel
+         */
         JPanel acc_panel = new JPanel();
         acc_panel.setLayout(new BoxLayout(acc_panel, BoxLayout.PAGE_AXIS));
-        if( some_customer.get_acc_no()==0){
-            acc_panel.add(new JLabel("You don't have any open account. Try " +
-                    "opening " +
-                    "one !!!"));
-        }
-        else{
-            acc_panel.setPreferredSize(new Dimension(800,150));
-            acc_panel.setMaximumSize(new Dimension(800,150));
+        if (some_customer.get_acc_no() == 0) {
+            acc_panel.add(new JLabel("You don't have any open account. Try " + "opening " + "one !!!"));
+        } else {
+            acc_panel.setPreferredSize(new Dimension(800, 150));
+            acc_panel.setMaximumSize(new Dimension(800, 150));
             JScrollPane scrollFrame = new JScrollPane(acc_panel);
             acc_panel.setAutoscrolls(true);
-//            acc_panel.add(scrollFrame);
-            scrollFrame.setPreferredSize(new Dimension( 590,140));
-            for(Account i : some_customer.account_list){
+            // acc_panel.add(scrollFrame);
+            scrollFrame.setPreferredSize(new Dimension(590, 140));
+            for (Account i : some_customer.account_list) {
                 Box new_b = new Box(BoxLayout.X_AXIS);
                 new_b.setBorder(BorderFactory.createLineBorder(Color.black));
                 new_b.add(new JLabel("Account Type :  "));
@@ -412,16 +514,16 @@ public class Bank implements ActionListener {
                 new_b.add(Box.createVerticalStrut(1));
                 new_b.add(amount);
 
-                if (!i.get_type().equals("CD")){
+                if (!i.get_type().equals("CD")) {
 
                     JButton withdraw = new JButton("withdraw");
                     JButton deposit = new JButton("deposit");
                     new_b.add(withdraw);
                     new_b.add(deposit);
-                    withdraw.addActionListener(e->{
+                    withdraw.addActionListener(e -> {
                         withdraw_frame(i);
                     });
-                    deposit.addActionListener(e->{
+                    deposit.addActionListener(e -> {
                         deposit_frame(i);
                     });
                 }
@@ -430,14 +532,23 @@ public class Bank implements ActionListener {
         }
         return acc_panel;
     }
-    void dash_board(Customer some_customer) {
 
+    // GUI FUNCTION
+    void dash_board(Customer some_customer) {
+        /*
+         * Returns a JPanel with the dash board that houses all the home up and side
+         * views
+         * 
+         * @param some_customer(Customer)
+         * 
+         * 
+         */
         JFrame new_frame = new JFrame();
         new_frame.setTitle("The Bank : We will take your money");
         new_frame.setLocationRelativeTo(null);
-        final boolean[] home_bool = {true};
-        final boolean[] add_bool = {false};
-        final boolean[] acc_bool = {false};
+        final boolean[] home_bool = { true };
+        final boolean[] add_bool = { false };
+        final boolean[] acc_bool = { false };
         GridBagLayout layout = new GridBagLayout();
         new_frame.setLayout(layout);
         GridBagConstraints cons = new GridBagConstraints();
@@ -458,7 +569,8 @@ public class Bank implements ActionListener {
         JButton show_all_acc = new JButton("Show All Account");
         up.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
         side.setLayout(new BoxLayout(side, BoxLayout.PAGE_AXIS));
-        side.setBorder( new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
+        side.setBorder(
+                new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
         side_l.setFont(new Font("Courier", Font.BOLD, 20));
         side_l.setBorder(
                 new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
@@ -467,11 +579,14 @@ public class Bank implements ActionListener {
         home.setBackground(Color.LIGHT_GRAY);
         add_acc_b.setBackground(Color.LIGHT_GRAY);
         show_all_acc.setBackground(Color.LIGHT_GRAY);
-        side.add(home);side.add(add_acc_b);side.add(show_all_acc);
+        side.add(home);
+        side.add(add_acc_b);
+        side.add(show_all_acc);
 
-        view.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
+        view.setBorder(
+                new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(10, 10, 10, 10)));
         cons.fill = GridBagConstraints.HORIZONTAL;
-        cons.gridwidth= GridBagConstraints.REMAINDER;
+        cons.gridwidth = GridBagConstraints.REMAINDER;
         cons.weighty = 1.0;
         cons.weightx = 1.0;
         cons.gridx = 0;
@@ -482,91 +597,87 @@ public class Bank implements ActionListener {
         cons.weightx = 1.0;
         cons.gridx = 0;
         cons.gridy = 1;
-        cons.gridheight= GridBagConstraints.REMAINDER;
+        cons.gridheight = GridBagConstraints.REMAINDER;
         new_frame.add(side, cons);
         cons.fill = GridBagConstraints.BOTH;
         cons.weighty = 1.0;
         cons.weightx = 1.0;
         cons.gridx = 4;
         cons.gridy = 1;
-        cons.gridwidth= GridBagConstraints.REMAINDER;
-        cons.gridheight=GridBagConstraints.REMAINDER;
-        JPanel[] home_panel = {get_home(some_customer)};
+        cons.gridwidth = GridBagConstraints.REMAINDER;
+        cons.gridheight = GridBagConstraints.REMAINDER;
+        JPanel[] home_panel = { get_home(some_customer) };
         view.add(home_panel[0]);
         home_panel[0].setVisible(true);
         new_frame.add(view, cons);
-        JPanel[] acc_panel = {show_acc(some_customer)};
-        JPanel[] add_panel = {add_acc(some_customer)};
-        view.add(acc_panel[0]);view.add(add_panel[0]);
+        JPanel[] acc_panel = { show_acc(some_customer) };
+        JPanel[] add_panel = { add_acc(some_customer) };
+        view.add(acc_panel[0]);
+        view.add(add_panel[0]);
         add_panel[0].setVisible(false);
         acc_panel[0].setVisible(false);
-        home.addActionListener(e->{
-                if(home_bool[0] == false && add_bool[0]==true && acc_bool[0]==
-                        false){
-                    add_bool[0] = false;
-                    home_bool[0] = true;
-                    home_panel[0].removeAll();
-                    home_panel[0] = this.get_home(some_customer);
-                    System.out.println(home_panel[0]);
-                    System.out.println(some_customer.get_acc_no());
-                    home_panel[0].repaint();
-                    view.add(home_panel[0]);
-                    view.revalidate();
-                    acc_panel[0].setVisible(false);
-                    add_panel[0].setVisible(false);
-                    home_panel[0].setVisible(true);
+        home.addActionListener(e -> {
+            if (home_bool[0] == false && add_bool[0] == true && acc_bool[0] == false) {
+                add_bool[0] = false;
+                home_bool[0] = true;
+                home_panel[0].removeAll();
+                home_panel[0] = this.get_home(some_customer);
+                System.out.println(home_panel[0]);
+                System.out.println(some_customer.get_acc_no());
+                home_panel[0].repaint();
+                view.add(home_panel[0]);
+                view.revalidate();
+                acc_panel[0].setVisible(false);
+                add_panel[0].setVisible(false);
+                home_panel[0].setVisible(true);
 
+            } else if (home_bool[0] == false && add_bool[0] == false && acc_bool[0] == true) {
+                acc_bool[0] = false;
+                home_bool[0] = true;
+                home_panel[0].removeAll();
+                home_panel[0] = this.get_home(some_customer);
+                System.out.println(some_customer.get_acc_no());
+                home_panel[0].repaint();
+                view.add(home_panel[0]);
+                view.revalidate();
+                System.out.println(home_panel[0]);
+                acc_panel[0].setVisible(false);
+                add_panel[0].setVisible(false);
+                home_panel[0].setVisible(true);
 
-                }else if(home_bool[0] ==false && add_bool[0] ==false && acc_bool[0] == true){
-                    acc_bool[0] = false;
-                    home_bool[0] = true;
-                    home_panel[0].removeAll();
-                    home_panel[0] = this.get_home(some_customer);
-                    System.out.println(some_customer.get_acc_no());
-                    home_panel[0].repaint();
-                    view.add(home_panel[0]);
-                    view.revalidate();
-                    System.out.println(home_panel[0]);
-                    acc_panel[0].setVisible(false);
-                    add_panel[0].setVisible(false);
-                    home_panel[0].setVisible(true);
+            } else {
 
-                }else{
-
-                }
+            }
         });
         System.out.println(new JPanel());
 
-        add_acc_b.addActionListener(e-> {
+        add_acc_b.addActionListener(e -> {
 
-                if(home_bool[0] == true && add_bool[0]==false && acc_bool[0]==
-                        false){
+            if (home_bool[0] == true && add_bool[0] == false && acc_bool[0] == false) {
 
-                    add_bool[0] = true;
-                    home_bool[0] = false;
+                add_bool[0] = true;
+                home_bool[0] = false;
 
-                    System.out.println(some_customer.get_acc_no());
-                    home_panel[0].setVisible(false);
-                    acc_panel[0].setVisible(false);
-                    add_panel[0].setVisible(true);
+                System.out.println(some_customer.get_acc_no());
+                home_panel[0].setVisible(false);
+                acc_panel[0].setVisible(false);
+                add_panel[0].setVisible(true);
 
-                }else if(home_bool[0] ==false && add_bool[0] ==false && acc_bool[0] == true){
-                    acc_bool[0] = false;
-                    add_bool[0] = true;
-                    System.out.println(some_customer.get_acc_no());
-                    home_panel[0].setVisible(false);
-                    acc_panel[0].setVisible(false);
-                    add_panel[0].setVisible(true);
+            } else if (home_bool[0] == false && add_bool[0] == false && acc_bool[0] == true) {
+                acc_bool[0] = false;
+                add_bool[0] = true;
+                System.out.println(some_customer.get_acc_no());
+                home_panel[0].setVisible(false);
+                acc_panel[0].setVisible(false);
+                add_panel[0].setVisible(true);
 
+            } else {
 
-                }else{
-
-                }
+            }
         });
 
-        show_all_acc.addActionListener(e->{
-            if(home_bool[0] == true && add_bool[0]==false && acc_bool[0]==
-                    false){
+        show_all_acc.addActionListener(e -> {
+            if (home_bool[0] == true && add_bool[0] == false && acc_bool[0] == false) {
                 acc_bool[0] = true;
                 home_bool[0] = false;
                 acc_panel[0].removeAll();
@@ -578,7 +689,7 @@ public class Bank implements ActionListener {
                 acc_panel[0].setVisible(true);
                 add_panel[0].setVisible(false);
                 home_panel[0].setVisible(false);
-            }else if(home_bool[0] ==false && add_bool[0] ==true && acc_bool[0] == false){
+            } else if (home_bool[0] == false && add_bool[0] == true && acc_bool[0] == false) {
                 add_bool[0] = false;
                 acc_bool[0] = true;
                 acc_panel[0].removeAll();
@@ -590,12 +701,12 @@ public class Bank implements ActionListener {
                 acc_panel[0].setVisible(true);
                 add_panel[0].setVisible(false);
                 home_panel[0].setVisible(false);
-            }else{
+            } else {
 
-            }   
+            }
         });
         new_frame.setVisible(true);
-//         new_frame.pack();
+        // new_frame.pack();
     }
 
     @Override

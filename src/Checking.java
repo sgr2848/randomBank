@@ -1,17 +1,19 @@
 public class Checking extends Account {
 
-    public Checking(Currency init_deposit){
+    public Checking(Currency init_deposit) {
         super(init_deposit);
     }
-    public Result withdraw(Currency some_money){
-        if((this.amount.get_value() - some_money.get_value())< 0){
+
+    public Result withdraw(Currency some_money) {
+        if ((this.amount.get_value() - some_money.get_value()) < 0) {
             return Result.OVERDRAFT;
-        }else {
+        } else {
             this.amount.subtract(some_money);
             return Result.SUCCESS;
         }
     }
-    public Result deposit(Currency some_money){
+
+    public Result deposit(Currency some_money) {
         this.amount.add(some_money);
         return Result.SUCCESS;
     }
@@ -21,10 +23,16 @@ public class Checking extends Account {
         return super.toString();
     }
 
-    public String get_type(){
+    public String get_type() {
+        /*
+         * Returns the type of account
+         * 
+         * @returns String
+         */
         return "Checking";
     }
-    public Currency get_balance(){
+
+    public Currency get_balance() {
         return this.amount;
     }
 }
