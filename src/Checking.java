@@ -4,11 +4,18 @@ public class Checking extends Account {
         super(init_deposit);
     }
     public Result withdraw(Currency some_money){
-        return Result.SUCCESS;
+        if((this.amount.get_value() - some_money.get_value())< 0){
+            return Result.OVERDRAFT;
+        }else {
+            this.amount.subtract(some_money);
+            return Result.SUCCESS;
+        }
     }
     public Result deposit(Currency some_money){
+        this.amount.add(some_money);
         return Result.SUCCESS;
     }
+
     public String get_type(){
         return "Checking";
     }

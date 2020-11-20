@@ -228,13 +228,26 @@ public class Bank implements ActionListener {
         // If you want the value to be committed on each keystroke instead of focus lost
         formatter.setCommitsOnValidEdit(true);
         JFormattedTextField wit_amount = new JFormattedTextField(formatter);
-        JButton add_money = new JButton("Get My Money");
+        JButton get_money = new JButton("Get My Money");
         wit.add(wit_amount);
-        wit.add(add_money);
+        wit.add(get_money);
         wit.setVisible(true);
         n_d.add(wit);
         n_d.pack();
         n_d.setVisible(true);
+        get_money.addActionListener(e->{
+            Currency some_amount =
+                    new Currency(Integer.parseInt(wit_amount.getText())*100);
+            Account.Result some_result = i.withdraw(some_amount);
+            if (some_result == Account.Result.OVERDRAFT){
+                JOptionPane.showMessageDialog(null,
+                        "Withdraw failed, Account overdrafts");
+            }else {
+                JOptionPane.showMessageDialog(null, "Success");
+
+            }
+
+        });
     }
     void deposit_frame(Account i){
         JFrame n_d = new JFrame();
@@ -258,9 +271,9 @@ public class Bank implements ActionListener {
         dep.setVisible(true);
         n_d.setVisible(true);
         give_money.addActionListener(e->{
-
             int cent_val = Integer.parseInt(dep_amount.getText())*100;
             i.deposit(new Currency(cent_val));
+            JOptionPane.showMessageDialog(null,"Success");
         });
     }
     JPanel get_home(Customer some_customer){
