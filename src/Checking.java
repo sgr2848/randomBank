@@ -16,6 +16,11 @@ public class Checking extends Account {
         return Result.SUCCESS;
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     public String get_type(){
         return "Checking";
     }

@@ -12,4 +12,9 @@ abstract class Account {
     public abstract Result deposit(Currency some_money);
     public abstract Currency get_balance();
     public abstract String get_type();
+
+    @Override
+    public String toString() {
+        return "Account{" + "amount=" + amount + '}';
+    }
 }

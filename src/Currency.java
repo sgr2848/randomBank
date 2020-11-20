@@ -17,7 +17,7 @@ public class Currency {
         this.cents = this.cents - rhs.cents;
         return this;
     }
-    public String to_string(){
+    public String toString(){
         double dollar_value = this.cents/100;
         String string_value = String.format("You have $ %.3f",dollar_value);
         return string_value;

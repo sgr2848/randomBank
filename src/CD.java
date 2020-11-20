@@ -18,6 +18,11 @@ public class CD extends Account {
         return Result.SUCCESS;
     }
 
+    @Override
+    public String toString() {
+        return "CD{" + "rate=" + rate + '}';
+    }
+
     public Currency get_balance() {
         return this.amount;
     }

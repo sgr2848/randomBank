@@ -24,4 +24,9 @@ public class Saving extends Account{
     public Currency get_balance(){
         return this.amount;
     }
+
+    @Override
+    public String toString() {
+        return "Saving{" + "rate=" + rate + '}';
+    }
 }

@@ -13,22 +13,28 @@ import java.util.ArrayList;
 public class Bank implements ActionListener {
     public JFrame main_frame;
     private ArrayList<Customer> c_list;
-    public static boolean is_numeric(String strNum) {
-        if (strNum == null) {
-            return false;
-        }
-        try {
-            double d = Double.parseDouble(strNum);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
     public Bank() {
+        /*
+        Constructor for the Main GUI
+         */
+
         this.c_list = new ArrayList<Customer>();
+        Customer sgr = new Customer("Sagar","Shrestha","pass");
+        Account save_first = new Saving(new Currency(250000),2);
+        sgr.add_account(save_first);
+        this.c_list.add(sgr);
     }
+    //Utility Function
     private void add_to_acc_list(Customer some_customer, String dollar_val,
                                  String acc_type,String rate_val){
+        /*
+        *This method adds a new account to the customer
+        *@param some_customer(Customer) : Customer in which the acc is to be
+        * added.
+        *@param dollar_val(String) : Init amount
+        * @param acc_type(String) : Type of account(Saving, Checking ,CD)
+        * @param rate_val(String) : rate
+         */
         if (acc_type=="Checking") {
             int cents_val = Integer.parseInt(dollar_val) * 100;
             some_customer.add_account(new Checking(new Currency(cents_val)));
@@ -47,9 +53,10 @@ public class Bank implements ActionListener {
 
     public Customer get_customer(String first_name, String pass) {
         assert (this.c_list.size() > 0) : "There is no customer in the db";
-
+        System.out.println(first_name+pass);
         for (Customer i : this.c_list) {
-            if (i.get_first_name() == first_name && i.get_pass() == pass) {
+            if (i.get_first_name().equals(first_name) && i.get_pass().equals(pass)) {
+                System.out.println(i.toString());
                 return i;
             }
         }
@@ -57,23 +64,33 @@ public class Bank implements ActionListener {
     }
 
     public void init() {
-//         this.main_frame = new JFrame();
-//         main_frame.setLocationRelativeTo(null);
-//         main_frame.setTitle("The Bank : We will take your money");
-//         main_frame.setSize(400, 400);
-//         main_frame.setLayout(new BorderLayout());
-//         main_frame.setVisible(true);
-//        this.first_prompt();
-//        main_frame.pack();
-        dash_board(new Customer("Hiro","Kuda","Scum"));
-
+         this.main_frame = new JFrame();
+         main_frame.setLocationRelativeTo(null);
+         main_frame.setTitle("The Bank : We will take your money");
+         main_frame.setSize(400, 400);
+         main_frame.setLayout(new BorderLayout());
+         main_frame.setVisible(true);
+        this.first_prompt();
+        main_frame.pack();
     }
 
     private boolean check_customer(String first_name, String last_name, String pass) {
-        return false;
+        for (Customer i : this.c_list) {
+            if (i.get_first_name().equals(first_name) && i.get_pass().equals(pass)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    private boolean check_login(String name, String pass) {
+    private boolean check_login(String first_name, String pass) {
+        System.out.println(first_name+pass);
+        for (Customer i : this.c_list) {
+            i.toString();
+            if (i.get_first_name().equals(first_name) && i.get_pass().equals(pass)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -142,11 +159,11 @@ public class Bank implements ActionListener {
         add_panel.add(submit);
         submit.addActionListener(e -> {
             if (check_login(f_f.getText(), String.valueOf(p_f.getPassword())) == true) {
+
                 JComponent cmp = (JComponent) e.getSource();
                 Window win = SwingUtilities.getWindowAncestor(cmp);
-                win.dispose();
-
                 dash_board(get_customer(f_f.getText(), String.valueOf(p_f.getPassword())));
+                win.dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "Something didn't quite " + "add up, try again!");
             }
@@ -161,7 +178,6 @@ public class Bank implements ActionListener {
         new_frame.add(add_panel);
         new_frame.setVisible(true);
         new_frame.pack();
-
     }
 
     void add_customer() {
@@ -183,11 +199,14 @@ public class Bank implements ActionListener {
         title.setFont(title.getFont().deriveFont(20.0f));
         title_text.add(title);
         submit.addActionListener(e -> {
-            // System.out.println(f_f.getText());
             if (add_to_list(f_f.getText(), l_f.getText(), String.valueOf(p_f.getPassword())) != true) {
                 JOptionPane.showMessageDialog(null, "The User is " + "already in the database.");
             } else {
                 JOptionPane.showMessageDialog(null, "Sucessfully " + "added customers to the database");
+                dash_board(get_customer(f_f.getText(), String.valueOf(p_f.getPassword())));
+                JComponent cmp = (JComponent) e.getSource();
+                Window win = SwingUtilities.getWindowAncestor(cmp);
+                win.dispose();
             }
         });
 
@@ -210,9 +229,6 @@ public class Bank implements ActionListener {
                 .addGroup(group.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(submit)));
         new_frame.pack();
         new_frame.setVisible(true);
-
-        // this.main_frame = new_frame;
-
     }
     void withdraw_frame(Account i){
         JFrame n_d = new JFrame();
@@ -343,7 +359,6 @@ public class Bank implements ActionListener {
 
                 if( selected == true){
                     curr_selection[0] = item;
-                    System.out.println(item);
                 }
             }
         }
@@ -392,7 +407,7 @@ public class Bank implements ActionListener {
                 new_b.setBorder(BorderFactory.createLineBorder(Color.black));
                 new_b.add(new JLabel("Account Type :  "));
                 JLabel name = new JLabel(i.get_type());
-                JLabel amount = new JLabel(i.get_balance().to_string());
+                JLabel amount = new JLabel(i.get_balance().toString());
                 new_b.add(name);
                 new_b.add(Box.createVerticalStrut(1));
                 new_b.add(amount);
@@ -485,7 +500,6 @@ public class Bank implements ActionListener {
         view.add(acc_panel[0]);view.add(add_panel[0]);
         add_panel[0].setVisible(false);
         acc_panel[0].setVisible(false);
-        System.out.println(home_panel[0]);
         home.addActionListener(e->{
                 if(home_bool[0] == false && add_bool[0]==true && acc_bool[0]==
                         false){

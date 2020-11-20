@@ -25,6 +25,13 @@ public class Customer {
     public int get_acc_no(){
         return this.no_of_acc;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "first_name='" + first_name + '\'' + ", " +
+                "last_name='" + last_name + '\'' + ", pass_code='" + pass_code + '\'' + ", no_of_acc=" + no_of_acc + ", account_list=" + account_list + '}';
+    }
+
     public void add_account(Account account){
         this.account_list.add(account);
         this.no_of_acc++;
