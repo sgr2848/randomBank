@@ -5,6 +5,13 @@ public class Checking extends Account {
     }
 
     public Result withdraw(Currency some_money) {
+        /*
+         * Method that handles withdrawing
+         * 
+         * @param some_money(Currency)
+         * 
+         * @returns Result
+         */
         if ((this.amount.get_value() - some_money.get_value()) < 0) {
             return Result.OVERDRAFT;
         } else {
@@ -14,6 +21,13 @@ public class Checking extends Account {
     }
 
     public Result deposit(Currency some_money) {
+        /*
+         * Method that handles depositing
+         * 
+         * @param some_money(Currency)
+         * 
+         * @returns Result
+         */
         this.amount.add(some_money);
         return Result.SUCCESS;
     }
